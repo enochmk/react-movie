@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import HeroImage from '../elements/HeroImage/HeroImage';
 import SearchBar from '../elements/SearchBar/SearchBar';
 import FourColGrid from '../elements/FourColGrid/FourColGrid';
@@ -22,15 +23,11 @@ class Home extends Component {
 
 	componentDidMount() {
 		this.setState({ loading: true });
-
 		const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-
 		this.fetchItems(endpoint);
 	}
 
 	searchItems = (searchTerm) => {
-		console.log(searchTerm);
-
 		let endpoint = '';
 
 		this.setState({
@@ -59,20 +56,19 @@ class Home extends Component {
 			endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${this.state.searchTerm}&page=${this
 				.state.currentPage + 1}`;
 		}
-
 		this.fetchItems(endpoint);
 	};
 
 	fetchItems = (endpoint) => {
 		fetch(endpoint)
-			.then((result) => result.json())
-			.then((result) => {
+			.then((response) => response.json())
+			.then((response) => {
 				this.setState({
-					movies: [...this.state.movies, ...result.results],
-					heroImage: this.state.heroImage || result.results[0],
+					movies: [...this.state.movies, ...response.results],
+					heroImage: this.state.heroImage || response.results[0],
 					loading: false,
-					currentPage: result.page,
-					totalPages: result.total_pages
+					currentPage: response.page,
+					totalPages: response.total_pages
 				});
 			});
 	};

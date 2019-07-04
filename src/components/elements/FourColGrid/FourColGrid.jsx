@@ -11,7 +11,6 @@ const FourColGrid = (props) => {
 				</div>
 			);
 		});
-
 		return gridElements;
 	};
 

@@ -23,8 +23,15 @@ class Home extends Component {
 
 	componentDidMount() {
 		this.setState({ loading: true });
-		const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-		this.fetchItems(endpoint);
+
+		if (localStorage.getItem('HomeState')) {
+			setTimeout(() => {
+				this.setState(JSON.parse(localStorage.getItem('HomeState')));
+			}, 500);
+		} else {
+			const endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
+			this.fetchItems(endpoint);
+		}
 	}
 
 	searchItems = (searchTerm) => {
@@ -63,13 +70,20 @@ class Home extends Component {
 		fetch(endpoint)
 			.then((response) => response.json())
 			.then((response) => {
-				this.setState({
-					movies: [...this.state.movies, ...response.results],
-					heroImage: this.state.heroImage || response.results[0],
-					loading: false,
-					currentPage: response.page,
-					totalPages: response.total_pages
-				});
+				this.setState(
+					{
+						movies: [...this.state.movies, ...response.results],
+						heroImage: this.state.heroImage || response.results[0],
+						loading: false,
+						currentPage: response.page,
+						totalPages: response.total_pages
+					},
+					() => {
+						if (this.state.searchTerm === '') {
+							localStorage.setItem('HomeState', JSON.stringify(this.state));
+						}
+					}
+				);
 			});
 	};
 

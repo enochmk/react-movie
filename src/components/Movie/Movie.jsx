@@ -56,7 +56,6 @@ class Movie extends Component {
 	};
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="rmdb-movie">
 				{this.state.movie ? (
